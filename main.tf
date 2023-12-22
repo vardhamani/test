@@ -11,3 +11,11 @@ resource "aws_instance" "example" {
     Name = "MyEC2Instance"  # Replace with your desired instance name
   }
 }
+
+resource "aws_instance" "example1" {
+  ami           = "ami-079db87dc4c10ac91" 
+  instance_type = "t2.micro"
+  tags = {
+    Name = "Tagging-instance"  # Replace with your desired instance name
+  }
+}
