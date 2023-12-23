@@ -14,7 +14,7 @@ resource "aws_instance" "example" {
 
 resource "aws_instance" "example1" {
   ami           = "ami-079db87dc4c10ac91" 
-  instance_type = "t2.micro"
+  instance_type = "t3.medium"
   tags = {
     Name = "Tagging-instance"  # Replace with your desired instance name
   }
