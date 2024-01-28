@@ -1,0 +1,54 @@
+stages:
+  - prepare
+  - validate
+  - build
+  - deploy
+
+variables:
+  TF_ROOT: $CI_PROJECT_DIR 
+  GOOGLE_APPLICATION_CREDENTIALS: $CI_PROJECT_DIR/service-account.json
+
+before_script:
+  - echo "$GCP_SERVICE_ACCOUNT" | base64 -d > "$GOOGLE_APPLICATION_CREDENTIALS"
+  - gcloud auth activate-service-account --key-file "$GOOGLE_APPLICATION_CREDENTIALS"
+  - apt-get update -y && apt-get install -y openssh-client
+  - eval $(ssh-agent -s)
+  - echo "$SSH_PRIVATE_KEY" | tr -d '\r' | ssh-add -
+  - mkdir -p ~/.ssh
+  - chmod 700 ~/.ssh
+  - ssh-keyscan -H 'gitlab.example.com' >> ~/.ssh/known_hosts
+  - chmod 644 ~/.ssh/known_hosts
+  - git config --global ssh.variant ssh
+
+prepare:
+  stage: prepare
+  script:
+    - echo "Prepare the environment, e.g., set up cache, download dependencies, etc."
+
+validate_terraform:
+  stage: validate
+  script:
+    - cd $TF_ROOT
+    - terraform init -input=false
+    - terraform validate
+
+plan_terraform:
+  stage: build
+  script:
+    - cd $TF_ROOT
+    - terraform plan -out=tfplan
+  artifacts:
+    paths:
+      - tfplan
+    expire_in: 1 hour
+  only:
+    - merge_requests
+
+apply_terraform:
+  stage: deploy
+  script:
+    - cd $TF_ROOT
+    - terraform apply -input=false tfplan
+  when: manual
+  only:
+    - main
