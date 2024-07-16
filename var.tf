@@ -3,6 +3,7 @@ variable "region" {
   default     = "us-east-1"
 }
 
+
 variable "vpc_id" {
   description = "ID of the VPC"
   type        = string
@@ -13,8 +14,14 @@ variable "db_subnet_group_name" {
   type        = string
 }
 
+variable "db_parameter_group_name" {
+  description = "Name of the DB parameter group"
+  type        = string
+}
+
 variable "security_group_name" {
   description = "Name of the security group for RDS"
+  default     = "rds-sg"
   type        = string
 }
 
@@ -84,16 +91,6 @@ variable "deletion_protection" {
   default     = false
 }
 
-variable "performance_insights_enabled" {
-  description = "Enable Performance Insights"
-  default     = true
-}
-
-variable "performance_insights_retention_period" {
-  description = "Performance Insights retention period in days"
-  default     = 7
-}
-
 variable "create_monitoring_role" {
   description = "Create IAM role for enhanced monitoring"
   default     = true
@@ -137,7 +134,7 @@ variable "tags" {
   description = "Tags to apply to resources"
   type        = map(string)
   default     = {
-    Name       = "my-rds-instance"
+    Name        = "my-rds-instance"
     Environment = "dev"
   }
 }
