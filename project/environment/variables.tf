@@ -1,46 +1,51 @@
+# Standard variables
+variable "region" {
+   type = string
+   default = "us-east-1"
+}
+
+# # remote_states variables
+# variable "workspace_state_bucket" {
+#   description = "The location of the object storage for remote states that are workspace-aware."
+#   type        = string
+# }
+variable "name" {
+  default = "my-secret" 
+  
+}
+variable "db_username" {
+  description = "The database username"
+  type        = string
+  sensitive   = true
+}
+
+variable "db_password" {
+  description = "The database password"
+  type        = string
+  sensitive   = true
+}
+
 variable "vpc_id" {
   description = "The ID of the VPC"
 }
 
-variable "security_group_name" {
-  description = "The name of the security group"
+variable "subnet_ids" {
+  description = "list of subnet ids"
+  type = list(string) 
 }
 
-variable "security_group_description" {
-  description = "The description of the security group"
-}
+# variable "security_group_description" {
+#    description = "The name of the security group"
+#    default = ""
+#  }
 
-variable "ingress_from_port" {
-  description = "The ingress from port"
-}
+#  variable "security_group_name" {
+#    description = "The name of the security group"
+#  }
 
-variable "ingress_to_port" {
-  description = "The ingress to port"
-}
-
-variable "ingress_protocol" {
-  description = "The ingress protocol"
-}
 
 variable "ingress_cidr_blocks" {
   description = "The ingress CIDR blocks"
-  type        = list(string)
-}
-
-variable "egress_from_port" {
-  description = "The egress from port"
-}
-
-variable "egress_to_port" {
-  description = "The egress to port"
-}
-
-variable "egress_protocol" {
-  description = "The egress protocol"
-}
-
-variable "egress_cidr_blocks" {
-  description = "The egress CIDR blocks"
   type        = list(string)
 }
 
@@ -52,20 +57,8 @@ variable "db_parameter_group_name" {
   description = "The name of the DB parameter group"
 }
 
-variable "db_family" {
-  description = "The DB parameter group family"
-}
-
-variable "rds_module_version" {
-  description = "The version of the RDS module to use"
-}
-
 variable "db_identifier" {
   description = "The identifier of the RDS instance"
-}
-
-variable "db_engine" {
-  description = "The database engine to use"
 }
 
 variable "db_engine_version" {
@@ -80,97 +73,105 @@ variable "db_instance_class" {
   description = "The instance class of the RDS instance"
 }
 
-variable "db_allocated_storage" {
-  description = "The allocated storage in gigabytes"
-}
-
-variable "max_allocated_storage" {
-  description = "The maximum allocated storage in gigabytes"
-}
-
 variable "db_name" {
   description = "The name of the database"
 }
 
-variable "db_username" {
-  description = "The master username for the database"
-}
-
-variable "db_password" {
-  description = "The master password for the database"
-  sensitive = true
-}
-
-variable "db_port" {
-  description = "The port on which the DB accepts connections"
-}
-
-variable "multi_az" {
-  description = "Specifies if the RDS instance is multi-AZ"
-}
-
-variable "maintenance_window" {
-  description = "The window to perform maintenance in"
-}
-
-variable "backup_window" {
-  description = "The window to perform backups in"
-}
-
-variable "skip_final_snapshot" {
-  description = "Determines whether a final DB snapshot is created before the DB instance is deleted"
-}
-
-variable "deletion_protection" {
-  description = "If the DB instance should have deletion protection enabled"
-}
-
-variable "performance_insights_enabled" {
-  description = "Specifies if Performance Insights are enabled"
-}
-
-variable "performance_insights_retention_period" {
-  description = "The amount of time in days to retain Performance Insights data"
-}
-
-variable "create_monitoring_role" {
-  description = "Specifies if a monitoring role should be created"
-}
-
-variable "monitoring_interval" {
-  description = "The interval, in seconds, between points when CloudWatch metrics are collected"
-}
-
-variable "enabled_cloudwatch_logs_exports" {
-  description = "List of log types to export to CloudWatch"
-  type        = list(string)
-}
-
-variable "create_cloudwatch_log_group" {
-  description = "Specifies if a CloudWatch log group should be created"
-}
+# variable "db_credentials_secret_name" {
+#   description = "The master username for the database"
+# }
 
 variable "tags" {
   description = "A map of tags to assign to the resources"
   type        = map(string)
+  default  = {}
 }
 
-variable "db_instance_tags" {
-  description = "A map of tags to assign to the DB instance"
-  type        = map(string)
-}
-
-variable "db_option_group_tags" {
-  description = "A map of tags to assign to the DB option group"
-  type        = map(string)
-}
-
-variable "db_parameter_group_tags" {
+variable "db_credentials_secret_name" {
   description = "A map of tags to assign to the DB parameter group"
-  type        = map(string)
+  type        = string
+  default  = "db_secret1"
 }
 
-variable "db_subnet_group_tags" {
-  description = "A map of tags to assign to the DB subnet group"
-  type        = map(string)
+# # Add these variables
+# variable "db_username" {
+#   description = "The master username for the database"
+#   type        = string
+# }
+
+# variable "db_password" {
+#   description = "The master password for the database"
+#   type        = string
+#   sensitive   = true
+# }
+
+
+variable "environment" {
+  type    = string
+  default = "development"
+}
+
+variable "sub_environment" {
+  type    = string
+  default = "test"
+}
+
+variable "service" {
+  type    = string
+  default = "jira"
+}
+
+variable "layer" {
+  description = "(Optional) Set if the security group is aligned with a layer (tier)."
+  type        = string
+  default     = "rds"
+}
+
+variable "function" {
+  description = "A short functional name for this security group."
+  type        = string
+  default     = "rds"
+}
+
+
+variable "create_db_subnet_group" {
+  description = "Specifies whether to create a new DB subnet group"
+  type        = bool
+  default     = true
+}
+
+
+variable "db_subnet_group_use_name_prefix" {
+  type = bool
+  default = true
+}
+
+
+variable "parameter_group_use_name_prefix" {
+  type = bool
+  default = true
+}
+
+variable "create_db_parameter_group" {
+  description = "Specifies whether to create a new DB parameter group"
+  type        = bool
+  default     = true
+}
+
+variable "create_db_option_group" {
+  description = "Specifies whether to create a new DB option group"
+  type        = bool
+  default     = true
+}
+
+variable "option_group_name" {
+  description = "The name of the DB option group"
+  type        = string
+  default     = ""
+}
+
+variable "option_group_use_name_prefix" {
+  description = "Whether to use a name prefix for the DB option group"
+  type        = bool
+  default     = true
 }
