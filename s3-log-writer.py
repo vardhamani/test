@@ -129,3 +129,5 @@ def lambda_handler(event, context):
 
 if _name_ == "_main_":
     lambda_handler()
+
+##Here's the writer API: https://v4uovx3rhc.execute-api.us-east-1.amazonaws.com/dev/s3-writer
